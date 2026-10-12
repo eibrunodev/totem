@@ -11,6 +11,7 @@ import { OrderCompletePage } from '@/pages/OrderCompletePage';
 import { KitchenPage } from '@/pages/KitchenPage';
 import { AdminPage } from '@/pages/AdminPage';
 import { AdminMenuPage } from '@/pages/AdminMenuPage';
+import { WaiterPage } from '@/pages/WaiterPage';
 
 /**
  * Mapa de rotas da aplicação.
@@ -36,6 +37,7 @@ export function AppRoutes() {
 
       {/* Telas independentes */}
       <Route path="/cozinha" element={<KitchenPage />} />
+      <Route path="/garcom" element={<WaiterPage />} />
       <Route path="/admin" element={<AdminPage />} />
 
       {/* Fallback */}

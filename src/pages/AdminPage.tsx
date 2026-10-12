@@ -24,9 +24,12 @@ export function AdminPage() {
     <div className="admin">
       <header className="admin__header">
         <h1 className="admin__title">Painel administrativo</h1>
-        <Link to={ROUTES.home} className="btn btn-secondary">
-          Voltar ao Totem
-        </Link>
+        <div className="admin__header-actions">
+          <Link to="/garcom" className="btn btn-primary">Atendimento de mesas</Link>
+          <Link to={ROUTES.home} className="btn btn-secondary">
+            Voltar ao Totem
+          </Link>
+        </div>
       </header>
 
       <div className="admin__notice">
