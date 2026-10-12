@@ -135,9 +135,10 @@ export function WaiterPage() {
 
   const updateCustomerName = (customerName: string) => {
     if (activeTable === null) return;
+    const tableNumber = activeTable;
     setSessions((current) => ({
       ...current,
-      [activeTable]: { ...current[activeTable], customerName },
+      [tableNumber]: { ...current[tableNumber], customerName },
     }));
   };
 
@@ -153,6 +154,7 @@ export function WaiterPage() {
 
   const sendToKitchen = () => {
     if (activeTable === null || !currentSession || draftItems.length === 0) return;
+    const tableNumber = activeTable;
     const orderItems = toOrderItems(draftItems);
     const batchTotal = itemsTotal(orderItems);
     const orderNumber = getNextKitchenNumber();
@@ -161,7 +163,7 @@ export function WaiterPage() {
       companyId,
       orderId: createId('table-order'),
       number: orderNumber,
-      customerName: `Mesa ${activeTable}${currentSession.customerName ? ` · ${currentSession.customerName}` : ''}`,
+      customerName: `Mesa ${tableNumber}${currentSession.customerName ? ` · ${currentSession.customerName}` : ''}`,
       items: orderItems,
       total: batchTotal,
       status: 'NEW',
@@ -172,8 +174,8 @@ export function WaiterPage() {
     mockStore.pushToKitchen(kitchenOrder);
     setSessions((current) => ({
       ...current,
-      [activeTable]: {
-        ...current[activeTable],
+      [tableNumber]: {
+        ...current[tableNumber],
         items: [...current[activeTable].items, ...orderItems],
       },
     }));
@@ -183,12 +185,13 @@ export function WaiterPage() {
 
   const checkout = async () => {
     if (activeTable === null || !currentSession || currentSession.items.length === 0) return;
+    const tableNumber = activeTable;
     setProcessingPayment(true);
     setFeedback('');
     try {
       const result = await paymentService.process({
         companyId,
-        orderId: `table-${activeTable}-${currentSession.openedAt}`,
+        orderId: `table-${tableNumber}-${currentSession.openedAt}`,
         method: paymentMethod,
         amount: currentTotal,
       });
@@ -198,7 +201,7 @@ export function WaiterPage() {
       }
       setSessions((current) => {
         const next = { ...current };
-        delete next[activeTable];
+        delete next[tableNumber];
         return next;
       });
       setDraftItems([]);
