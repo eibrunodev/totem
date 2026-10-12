@@ -1,0 +1,38 @@
+.totem {
+  min-height: 100dvh;
+  background: radial-gradient(circle at 50% -10%, #1e293b 0%, var(--bg) 55%);
+  display: flex;
+  justify-content: center;
+  padding: max(0px, env(safe-area-inset-top)) 0 0;
+}
+
+/* O "tablet": limita largura para leitura confortável, mas cresce
+   até ocupar a tela em totens grandes. */
+.totem__frame {
+  width: 100%;
+  max-width: 900px;
+  min-height: 100dvh;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.totem__screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Em telas largas (totem paisagem) mantém o quadro centralizado
+   com respiro lateral. */
+@media (min-width: 1024px) {
+  .totem { padding-top: 0; }
+  .totem__frame {
+    max-width: 1100px;
+    margin: 0;
+    box-shadow: var(--shadow-lg);
+  }
+}

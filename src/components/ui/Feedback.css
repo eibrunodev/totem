@@ -1,0 +1,13 @@
+.feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  min-height: 240px;
+  color: var(--text);
+}
+.feedback__icon { font-size: 4rem; }
+.feedback__label { color: var(--text-muted); font-size: 1.2rem; }

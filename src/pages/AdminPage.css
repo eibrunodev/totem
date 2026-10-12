@@ -1,0 +1,55 @@
+.admin {
+  min-height: 100dvh;
+  background: var(--surface-2);
+  padding: 1.75rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.admin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.admin__title { font-size: 1.8rem; font-weight: 800; }
+.admin__notice {
+  background: var(--brand-soft);
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.admin__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.admin__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  position: relative;
+}
+.admin__icon { font-size: 2.2rem; }
+.admin__card-title { font-size: 1.15rem; font-weight: 800; }
+.admin__card-desc { color: var(--text-muted); font-size: 0.95rem; }
+.admin__soon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface-3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}

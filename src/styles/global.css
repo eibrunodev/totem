@@ -1,0 +1,201 @@
+/* ============================================================
+   TotemFood — Design System (touchscreen / kiosk)
+   ------------------------------------------------------------
+   Princípios: alto contraste, botões grandes, áreas de toque
+   generosas, sem depender de hover, tipografia legível de longe.
+   ============================================================ */
+
+:root {
+  /* Marca (sobrescrita em runtime por CompanyContext = white-label) */
+  --brand: #f97316;
+  --brand-strong: #ea580c;
+  --brand-soft: #fff7ed;
+
+  /* Superfícies e texto */
+  --bg: #0f172a;
+  --bg-2: #131c31;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #f1f5f9;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Estados */
+  --success: #16a34a;
+  --success-soft: #dcfce7;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --warning: #d97706;
+  --info: #2563eb;
+
+  /* Raio, sombra, espaçamento */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.25);
+
+  --tap: 64px; /* altura mínima de alvo de toque */
+
+  --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  /* Evita seleção de texto acidental no toque */
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+input {
+  font-family: inherit;
+}
+
+/* ---------------- Tipografia ---------------- */
+.h1 { font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; }
+.h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.01em; }
+.h3 { font-size: clamp(1.2rem, 2.2vw, 1.6rem); font-weight: 700; }
+.text-muted { color: var(--text-muted); }
+.text-brand { color: var(--brand-strong); }
+
+/* ---------------- Botões ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: var(--tap);
+  padding: 0 1.6rem;
+  border-radius: var(--radius);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--surface-3);
+  transition: transform 0.08s ease, filter 0.15s ease, background 0.15s ease;
+  user-select: none;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; pointer-events: none; }
+
+.btn-lg { min-height: 76px; font-size: 1.35rem; padding: 0 2.2rem; border-radius: var(--radius-lg); }
+.btn-xl { min-height: 92px; font-size: 1.6rem; padding: 0 2.6rem; border-radius: var(--radius-lg); }
+.btn-block { width: 100%; }
+
+.btn-primary { background: var(--brand); color: var(--text-inverse); box-shadow: var(--shadow); }
+.btn-primary:active { background: var(--brand-strong); }
+
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger-soft); color: var(--danger); }
+.btn-secondary { background: var(--surface); color: var(--text); border: 2px solid var(--border); }
+.btn-ghost { background: transparent; color: var(--text-muted); }
+
+/* ---------------- Cards ---------------- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* ---------------- Utilidades ---------------- */
+.stack { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.center { align-items: center; justify-content: center; }
+.gap-sm { gap: 0.6rem; }
+.gap { gap: 1rem; }
+.gap-lg { gap: 1.6rem; }
+.grow { flex: 1; }
+.wrap { flex-wrap: wrap; }
+
+/* ---------------- Badges de status ---------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.badge-new { background: var(--info); color: #fff; }
+.badge-progress { background: var(--warning); color: #fff; }
+.badge-ready { background: var(--success); color: #fff; }
+.badge-done { background: var(--surface-3); color: var(--text-muted); }
+
+/* ---------------- Animações ---------------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.fade-up { animation: fadeUp 0.35s ease both; }
+.pop { animation: pop 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 6px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+.spinner-dark {
+  border-color: var(--surface-3);
+  border-top-color: var(--brand);
+}
+
+/* Respeita usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Barra de rolagem discreta e touch-friendly */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.35); border-radius: 999px; }
