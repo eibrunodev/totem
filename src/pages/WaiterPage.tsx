@@ -13,9 +13,37 @@ import { createId } from '@/utils/id';
 import { ROUTES } from '@/config/constants';
 import './WaiterPage.css';
 
-const TABLE_COUNT = 12;
 const TABLE_STORAGE_KEY = 'totemfood.tableSessions';
+const TABLE_LIST_KEY = 'totemfood.tableList';
 const TABLE_ORDER_NUMBER_KEY = 'totemfood.tableOrderNumber';
+
+
+function readTableNumbers(): number[] {
+  try {
+    const saved = localStorage.getItem(TABLE_LIST_KEY);
+
+    if (saved) {
+      const parsed: unknown = JSON.parse(saved);
+
+      if (Array.isArray(parsed)) {
+        const validTables = parsed.filter(
+          (value): value is number =>
+            typeof value === 'number' &&
+            Number.isInteger(value) &&
+            value > 0
+        );
+
+        if (validTables.length > 0) {
+          return [...new Set(validTables)].sort((a, b) => a - b);
+        }
+      }
+    }
+  } catch {
+    // Recupera a lista padrão se os dados forem inválidos.
+  }
+
+  return Array.from({ length: 12 }, (_, index) => index + 1);
+}
 
 interface DraftItem {
   product: Product;
@@ -30,14 +58,43 @@ interface TableSession {
   items: OrderItem[];
 }
 
+
 function readSessions(): Record<number, TableSession> {
   try {
     const raw = localStorage.getItem(TABLE_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Record<number, TableSession>) : {};
+
+    if (!raw) return {};
+
+    const parsed: unknown = JSON.parse(raw);
+
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return {};
+    }
+
+    const sessions: Record<number, TableSession> = {};
+
+    for (const [key, value] of Object.entries(parsed)) {
+      if (!value || typeof value !== 'object') continue;
+
+      const session = value as Partial<TableSession>;
+      const tableNumber = Number(key);
+
+      if (!Number.isInteger(tableNumber) || tableNumber <= 0) continue;
+
+      sessions[tableNumber] = {
+        tableNumber,
+        customerName: session.customerName ?? '',
+        openedAt: session.openedAt ?? new Date().toISOString(),
+        items: Array.isArray(session.items) ? session.items : [],
+      };
+    }
+
+    return sessions;
   } catch {
     return {};
   }
 }
+
 
 function getNextKitchenNumber(): number {
   try {
@@ -69,9 +126,14 @@ function toOrderItems(items: DraftItem[]): OrderItem[] {
   });
 }
 
-function itemsTotal(items: OrderItem[]): number {
-  return items.reduce((sum, item) => sum + item.lineTotal, 0);
+
+function itemsTotal(items: OrderItem[] | undefined | null): number {
+  return (items ?? []).reduce(
+    (sum, item) => sum + (Number(item.lineTotal) || 0),
+    0
+  );
 }
+
 
 /** Atendimento de mesas para garçons. Dados de comanda simulados em localStorage. */
 export function WaiterPage() {
@@ -87,7 +149,30 @@ export function WaiterPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('PIX');
   const [processingPayment, setProcessingPayment] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [tableNumbers, setTableNumbers] = useState<number[]>(readTableNumbers);
+  
+  
+  const handleAddTable = () => {
+    const nextTable = Math.max(0, ...tableNumbers) + 1;
 
+    setTableNumbers((current) =>
+      current.includes(nextTable)
+        ? current
+        : [...current, nextTable].sort((a, b) => a - b)
+    );
+
+    setFeedback(`Mesa ${nextTable} adicionada com sucesso.`);
+  };
+
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(TABLE_LIST_KEY, JSON.stringify(tableNumbers));
+    } catch {
+      setFeedback('Não foi possível salvar as comandas neste navegador.');
+    }
+  }, [tableNumbers]);
+  
   useEffect(() => {
     try {
       localStorage.setItem(TABLE_STORAGE_KEY, JSON.stringify(sessions));
@@ -95,6 +180,7 @@ export function WaiterPage() {
       setFeedback('Não foi possível salvar as comandas neste navegador.');
     }
   }, [sessions]);
+
 
   useEffect(() => {
     if (!activeCategory && categoriesState.data?.length) {
@@ -242,9 +328,15 @@ export function WaiterPage() {
               <span><i className="waiter__dot waiter__dot--free" /> Livre</span>
               <span><i className="waiter__dot waiter__dot--busy" /> Comanda aberta</span>
             </div>
+            <button
+              className="btn btn-primary"
+              onClick={handleAddTable}
+            >
+              + Adicionar mesa
+            </button>
           </div>
           <div className="waiter__tables">
-            {Array.from({ length: TABLE_COUNT }, (_, index) => index + 1).map((tableNumber) => {
+            {tableNumbers.map((tableNumber) => {
               const session = sessions[tableNumber];
               const total = session ? itemsTotal(session.items) : 0;
               return (
